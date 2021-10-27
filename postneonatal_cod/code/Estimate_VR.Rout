@@ -1,0 +1,228 @@
+
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> 
+> #############################
+> # admin for Amy
+> #setwd("H:/MCEE/analysis")
+> rm(list=ls())
+> Start.time<- Sys.time()
+> 
+> #############################
+> #### Analysis of samples
+> library(sirt)
+- sirt 3.9-4 (2020-02-17 12:57:09)
+> library(R2jags)
+Loading required package: rjags
+Loading required package: coda
+Linked to JAGS 4.3.0
+Loaded modules: basemod,bugs
+
+Attaching package: ‘R2jags’
+
+The following object is masked from ‘package:coda’:
+
+    traceplot
+
+> library(doParallel)
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: parallel
+> library(coda)
+> library(lattice)
+> 
+> 
+> 
+> ## Load data
+> load(file="../data/PN_VR_data.RData")
+> vxf #covariates
+ [1] "Iwhoreg6_2"       "Iwhoreg6_3"       "Iwhoreg6_4"       "Iwhoreg6_6"      
+ [5] "ln_u5pop_cov"     "x_DPT3_cov"       "year"             "HDI_cov"         
+ [9] "Hib3_cov"         "ln_DPT3_cov"      "ln_5q0_cov"       "skilled_ba_cov"  
+[13] "water_cov"        "ln_HDI_cov"       "ln_urban_cov"     "ln_edu_index_cov"
+[17] "gini_cov"         "ln_ppp_cov"      
+> vxr #Random effect identifier
+[1] "isocode"
+> vdt #causes
+[1] "pneumonia"   "diarrhea"    "meningitis"  "perinatal"   "othergroup1"
+[6] "congenital"  "otherncd"    "injuries"   
+> #summary(data.predict)
+> dim(studies)
+[1] 1331   24
+> #head(studies)
+> #summary(studies)
+> #dim(deaths)
+> #head(deaths)
+> 
+> 
+> 
+> 
+> #Written by Amy Mulick and David Prieto
+> source("functions_VRMod.R")
+> 
+> #vxf<- vxf[which(!vxf %in% c("yr_mid","ln_underwt"))]
+> #vxf
+> test.label<- "Test0"
+> vxf
+ [1] "Iwhoreg6_2"       "Iwhoreg6_3"       "Iwhoreg6_4"       "Iwhoreg6_6"      
+ [5] "ln_u5pop_cov"     "x_DPT3_cov"       "year"             "HDI_cov"         
+ [9] "Hib3_cov"         "ln_DPT3_cov"      "ln_5q0_cov"       "skilled_ba_cov"  
+[13] "water_cov"        "ln_HDI_cov"       "ln_urban_cov"     "ln_edu_index_cov"
+[17] "gini_cov"         "ln_ppp_cov"      
+> 
+> vxf<-  c( "Iwhoreg6_2",       "Iwhoreg6_3",       "Iwhoreg6_4",       "Iwhoreg6_6",
++   "x_DPT3_cov",       "year",
++   "Hib3_cov"    ,     "ln_5q0_cov",
++   "ln_urban_cov",     "ln_edu_index_cov",
++   "ln_ppp_cov")
+> 
+> #q()
+> 
+> ############  Esimate Models with apparent precission (all data) ################
+> for(lam in c(5)) {
++ for(sd in c(0.07)) { #c(0.21, 0.28, 0.35, 0.42 )) {
++   #load(file="PN_data_20200407_no_underwt.RData")
++ #  load(file="PN_data_2018_NEWCOV_yr.RData")
++ #  vxf<- vxf[which(!vxf %in% c("yr_mid","ln_underwt")]
++   vxf
++ 
++ 
++ 
++   Start<- Sys.time()
++   print(Start)
++   cat("\n\n LAMBDA ",lam," , sd = ", sd, "  \n\n")
++ 
++ 
++   out<- f.e1(PARA=1,        #1 - use parallel computing, 0 - use serial computing
++              STUD=studies,  #Input study data
++              DEAT=deaths,   #Deaths from input studies (in misclassification matrix)
++              VDT=vdt,       #Causes
++              VXF=vxf,       #Covariates
++              VXR=vxr,       #Random Effect identifier
++              MODL="LASSO_VR.txt", #Text file with JAGS model defintion
++              LAMB=lam,      #Lambda value for Lasso
++              RSDL=sd,       #For prior of standard deviation of random effects, maximum of SD
++              QUAD=0,        #NULL if no quadratic terms desired
++              CHAS=4,        #Number of MCMC chains
++              ITER=20000,      #Number of MCMC iterations
++              BURN=15000,        #Number of iterations for burn-in of MCMC
++              THIN=10,        #Thining factor for MCMC
++              SEED=123,      #random seed for jags.parallel (for jags use set.seed() first)
++              PRIN=TRUE,     #Print computation stage
++              SAMC=TRUE,     #T/F save MCMC samples?
++              SAVX=TRUE,     #Save explanatory variables
++              SADE=TRUE,     #Save death matrix
++              NAME=NULL      #Optional model names
++              )
++ 
++ 
++   #names(out)
++   #out$param
++   #names(out$output$BUGSoutput)
++ 
++   print(Sys.time() - Start)
++ 
++   #names(jm.r0)
++   #head(summary(jm.r0))
++ 
++   ######################################################
++   #convergence statistics
++   class(out$output$BUGSoutput)
++   #summ <-  sirt::mcmc.list.descriptives( as.mcmc(out$output$BUGSoutput) )
++   #warnings()
++   summ<-as.data.frame(out$output$BUGSoutput$summary)
++     names(summ)
++     cat("\n\nSummary Rhat\n")
++   print(summary(summ$Rhat))
++   #hist(summ$Rhat, main=paste("Lambda resampled, sd max = ",sd))
++ 
++   eb0   <- out$output$BUGSoutput$median$B # fixed effects
++   cat("\n\n BETA estimate\n\n")
++   print(eb0)
++ 
++   save(out,
++        #summ, jm.r0,
++        #lambda, sd,
++        #studies, data.predict, deaths,
++        #vxf, #predictors
++        #vdt, #causes
++        file=paste0("../results/VR_Bayes_lambda",lambda,"_sd_",sd,".RData"))
++ 
++ } #end loop over sds
++ } #end loop over lambdas
+[1] "2021-08-30 16:21:40 EDT"
+
+
+ LAMBDA  5  , sd =  0.07   
+
+[1] "time =  74959.274"
+Time difference of 20.82205 hours
+
+
+Summary Rhat
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   1.002   1.007   1.229   1.035   5.740 
+
+
+ BETA estimate
+
+             [,1]         [,2]         [,3]        [,4]         [,5]
+ [1,] -1.77307804 -1.236828056 -0.519274841 -0.68786971  1.051750065
+ [2,]  0.35138642  0.006323216 -0.205346958  0.24975195 -0.080999904
+ [3,] -0.18997297 -0.183602011  0.046299100 -0.11159736  0.028760600
+ [4,]  0.05921573  0.061866570 -0.391726259  0.04239091 -0.156982510
+ [5,]  0.13883497 -0.128674970 -0.392023029 -0.06561515 -0.285066791
+ [6,]  0.08384703  0.046558849  0.006060651  0.03123332  0.003803473
+ [7,]  0.04209495 -0.222794083 -0.237802082 -0.20335347 -0.162159947
+ [8,]  0.03011482 -0.036688486  0.103020465  0.06777743  0.042978628
+ [9,]  0.39309177 -0.405365608 -1.003747198 -0.17925206 -0.788632952
+[10,]  0.07274135  0.089111015  0.002506645  0.11005144  0.058447369
+[11,] -0.34576168 -0.055689790  0.180515441 -0.08568262  0.129397920
+[12,]  0.15145287  0.192300934  0.331618821  0.27862968  0.122035262
+             [,6]         [,7]
+ [1,]  0.85816516  0.420681610
+ [2,]  0.02457266  0.049673885
+ [3,] -0.08948659 -0.024137624
+ [4,] -0.03095994  0.006385904
+ [5,] -0.14612765 -0.037454625
+ [6,] -0.05288169  0.037258212
+ [7,] -0.17555004 -0.150443847
+ [8,]  0.05198716  0.045954923
+ [9,] -0.55202421 -0.466584743
+[10,]  0.05945471  0.082810158
+[11,]  0.07655390  0.119082162
+[12,]  0.29714543  0.109345899
+> 
+> #what is estimate value of lambda?
+> #eL.a <- jm.r0$BUGSoutput$median$lambda # fixed effects
+> 
+> #jm.m<- as.mcmc(jm.r0)
+> 
+> #traceplot(jm.m[,"lambda"])
+> #summary(unlist(jm.m[,"lambda"]))
+> 
+> #summ
+> Sys.time() - Start.time
+Time difference of 20.82256 hours
+> 
+> proc.time()
+     user    system   elapsed 
+    2.805     0.466 74961.768 
