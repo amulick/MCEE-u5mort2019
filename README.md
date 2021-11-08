@@ -2,9 +2,39 @@
 
 Code and functions for paper by Jamie PERIN, Amy MULICK, Diana YEUNG, Francisco VILLAVICENCIO, Gerard LOPEZ, Kathleen L STRONG, David PRIETO-MERINO, Simon COUSENS, Robert E BLACK and Li LIU, published at The Lancet Child & Adolescent Health, 2021.
 
-This repository contains the following files and folders:
+This repository contains two folders (neonatal_cod, postneonatal_cod), each of which is organised into subfolders containing code, data and results.
 
-UPDATE
-Bayesian_COD.R: This file can be executed to upload data and run the analysis for the final Bayesian cause of death model from the published paper. Any reader should be able to run the code in R or RStudio, with no need to manipulate the file, but installing/uploading all the necessary libraries.
+## To reproduce basic neonatal cause-of-death fractions
 
-The Data subfolder contains all the necessary data to reproduce the published estimates. The data will be automatically uploaded when executing the R-script.
+The following five files should be run in sequence:
+
+1. Estimate_VA.R
+2. Estimate_VR1.R
+3. Estimate_VR2.R
+4. Predict.R
+5. Compile_VAVR.R
+
+Functions, statistical models and datasets required to run them are included in the subfolders.
+
+
+## To reproduce basic 1-59 month old cause-of-death fractions
+
+The following five files should be run in sequence:
+
+1.  Estimate_VA.R
+2.  Estimate_VR.R
+3.  Predict_VA.R
+4.  Predict_VR.R
+5.  Model_Averaging.R
+
+Functions, statistical models and datasets required to run them are included in the subfolders.
+
+
+## Combine estimated cause fractions and envelopes
+
+The code to reproduce the final estimates is in the file:
+
+child_cod_2000-2019.R 
+
+This script further parcels out and/or adjusts estimates for measles, TB, HIV, and malaria (outside high endemicity areas) as described in the paper.
+
