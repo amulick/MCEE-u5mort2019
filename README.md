@@ -4,9 +4,9 @@ Code and functions for paper by Jamie PERIN, Amy MULICK, Diana YEUNG, Francisco 
 
 This repository contains two folders (neonatal_cod, postneonatal_cod), each of which is organised into subfolders containing code, data and results.
 
-## To reproduce basic neonatal cause-of-death fractions
+## Neonatal (0-28 days) cause-of-death fractions
 
-The following five files should be run in sequence:
+To reproduce the model-based estimates, the following five files should be run in sequence:
 
 1. Estimate_VA.R
 2. Estimate_VR1.R
@@ -17,9 +17,9 @@ The following five files should be run in sequence:
 Functions, statistical models and datasets required to run them are included in the subfolders.
 
 
-## To reproduce basic 1-59 month old cause-of-death fractions
+## Child (1-59 months) cause-of-death fractions
 
-The following five files should be run in sequence:
+To reproduce the model-based estimates, the following five files should be run in sequence:
 
 1.  Estimate_VA.R
 2.  Estimate_VR.R
@@ -32,9 +32,9 @@ Functions, statistical models and datasets required to run them are included in 
 
 ## Combine estimated cause fractions and envelopes
 
-The code to reproduce the final estimates is in the file:
+The code to reproduce the final estimates is in the main file:
 
 child_cod_2000-2019.R 
 
-This script further parcels out and/or adjusts estimates for measles, TB, HIV, and malaria (outside high endemicity areas) as described in the paper.
+This script further parcels out and/or adjusts estimates for measles, TB, crisis, HIV, and malaria (outside high endemicity areas) deaths as described in the paper.
 
