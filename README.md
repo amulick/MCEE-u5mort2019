@@ -6,7 +6,7 @@ This repository contains two folders (neonatal_cod, postneonatal_cod), each of w
 
 ## Neonatal (0-28 days) cause-of-death fractions
 
-To reproduce the model-based estimates, the following five files should be run in sequence:
+To reproduce the model-based estimates, the following five files located in neonatal_cod/code should be run in sequence:
 
 1. Estimate_VA.R
 2. Estimate_VR1.R
@@ -14,12 +14,12 @@ To reproduce the model-based estimates, the following five files should be run i
 4. Predict.R
 5. Compile_VAVR.R
 
-Functions, statistical models and datasets required to run them are included in the subfolders.
+Functions, statistical models and datasets required to run them are included in the subfolders. Output files and datasets are also included for those wishing to view the results without running the code, except for the initial Bayesian model estimates (Estimate_XX.R, numbers 1-3 above). The files produced by these scripts are too large to store on Github.
 
 
 ## Child (1-59 months) cause-of-death fractions
 
-To reproduce the model-based estimates, the following five files should be run in sequence:
+To reproduce the model-based estimates, the following five files located in postneonatal_cod/code should be run in sequence:
 
 1.  Estimate_VA.R
 2.  Estimate_VR.R
@@ -27,7 +27,7 @@ To reproduce the model-based estimates, the following five files should be run i
 4.  Predict_VR.R
 5.  Model_Averaging.R
 
-Functions, statistical models and datasets required to run them are included in the subfolders.
+Functions, statistical models and datasets required to run them are included in the subfolders. Output files and datasets are also included for those wishing to view the results without running the code, except for the initial Bayesian model estimates (Estimate_XX.R, numbers 1-2 above). The files produced by these scripts are too large to store on Github.
 
 
 ## Combine estimated cause fractions and envelopes
